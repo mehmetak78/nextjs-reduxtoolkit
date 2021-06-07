@@ -11,6 +11,8 @@ async function handler(req, res) {
     return;
   }
 
+  console.log(session)
+
   res.status(200).json(
     [
       {

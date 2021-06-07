@@ -14,6 +14,7 @@ import LoadingSpinner from "../components/UI/LoadingSpinner";
 import {useDispatch} from "react-redux";
 import {showNotification} from "../store/notificationSlice";
 import {login} from "../store/authSlice";
+import keys from "../config/keys";
 
 const SignupPage = (props) => {
   const username = useInput('text', 'name', 'User Name', (value) => value.trim() !== '')
@@ -29,10 +30,10 @@ const SignupPage = (props) => {
   useEffect(() => {
     if (status === 'completed') {
       if (!error) {
-/*        const expirationTime = new Date(
-          new Date().getTime() + +data.expiresIn * 1000
+        const expirationTime = new Date(
+          new Date().getTime() +  keys.sessionTimeOut
         );
-        dispatch(login(username.value, data.idToken, expirationTime.toISOString()));*/
+        dispatch(login(username.value, null, expirationTime.toISOString()));
         router.push('/')
         dispatch(showNotification('Success!','Successfull Signup','success'));
       } else {

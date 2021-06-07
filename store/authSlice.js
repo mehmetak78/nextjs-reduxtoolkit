@@ -1,5 +1,9 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {calculateRemainingTime} from "../helpers/AuthHelpers";
+import {calculateRemainingTime} from "../helpers/FirebaseAuthHelpers";
+
+
+import { signOut } from 'next-auth/client';
+import {showNotification} from "./notificationSlice";
 
 const initialState = {
   username: null,
@@ -44,6 +48,7 @@ export const login = (username, token, expirationTime = null) => (dispatch, getS
 
   logoutTimer = setTimeout(() => {
     dispatch(logout());
+    dispatch(showNotification('Success!', 'Successfull Logout', 'success'));
   }, remainingTime );
 };
 
@@ -52,6 +57,7 @@ export const logout = () => (dispatch, getState) => {
     token: null,
     username: null
   }
+  signOut({redirect:true});
   dispatch(logoutAction(payload));
   localStorage.removeItem('token');
   localStorage.removeItem('expirationTime');

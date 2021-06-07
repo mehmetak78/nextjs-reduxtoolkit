@@ -5,12 +5,22 @@ import LogoMak from "./LogoMAK";
 
 import { useSession, signOut } from 'next-auth/client';
 
+import {showNotification} from "../../store/notificationSlice";
+import {useDispatch} from "react-redux";
+import {useRouter} from "next/router";
+
+
 function Header(props) {
 
   const [session, loading] = useSession();
 
-  const logoutHandler = () => {
-    signOut();
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const logoutHandler = (e) => {
+    signOut({redirect:true});
+    dispatch(showNotification('Success!', 'Successfull Logout', 'success'));
+    router.replace('/');
   };
 
   return (

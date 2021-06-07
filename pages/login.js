@@ -12,7 +12,8 @@ import { signIn } from 'next-auth/client';
 import LoadingSpinner from "../components/UI/LoadingSpinner";
 import {showNotification} from "../store/notificationSlice";
 import {useDispatch} from "react-redux";
-
+import {login} from "../store/authSlice";
+import keys from "../config/keys";
 
 
 const LoginPage = (props) => {
@@ -36,6 +37,10 @@ const LoginPage = (props) => {
 
     if (!result.error) {
       // set some auth state
+      const expirationTime = new Date(
+        new Date().getTime() +  keys.sessionTimeOut
+      );
+      dispatch(login(username.value, null, expirationTime.toISOString()));
       dispatch(showNotification('Success!', 'Successfull Login', 'success'));
       router.replace('/');
     }

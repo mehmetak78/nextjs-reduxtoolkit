@@ -24,7 +24,7 @@ const Products = (props) => {
     if (status === 'completed') {
       if (!error) {
         setProducts(data);
-        dispatch(showNotification('Success!', 'Successfull et Products', 'success'));
+        dispatch(showNotification('Success!', 'Successfull Get Products', 'success'));
       } else {
         console.log(error)
         dispatch(showNotification('Get Products Error', error, 'error'));
