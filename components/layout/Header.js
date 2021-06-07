@@ -3,19 +3,14 @@ import Link from 'next/link'
 import HeaderMessagesButton from "../messages/HeaderMessagesButton";
 import LogoMak from "./LogoMAK";
 
-import {logout} from "../../store/authSlice";
-
-import {useSelector} from "react-redux";
-import {useDispatch} from "react-redux";
-import {showNotification} from "../../store/notificationSlice";
+import { useSession, signOut } from 'next-auth/client';
 
 function Header(props) {
-  const dispatch = useDispatch();
-  const auth = useSelector(state => state.auth);
+
+  const [session, loading] = useSession();
 
   const logoutHandler = () => {
-    dispatch(logout());
-    dispatch(showNotification('Success!', 'Successfull Logout', 'success'));
+    signOut();
   };
 
   return (
@@ -27,7 +22,7 @@ function Header(props) {
 
       <nav>
         {
-          !auth.isLoggedIn &&
+          !session && !loading &&
           <ul>
             <li>
               <Link href='/login'>Login</Link>
@@ -38,7 +33,7 @@ function Header(props) {
           </ul>
         }
         {
-          auth.isLoggedIn &&
+          session &&
           <ul>
             <li>
               <Link href='/'>Home</Link>

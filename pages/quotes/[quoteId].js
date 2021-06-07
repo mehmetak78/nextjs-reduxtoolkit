@@ -1,4 +1,4 @@
-import {Fragment, useEffect} from 'react';
+import { useEffect} from 'react';
 //import { useParams, Route, Link, useRouteMatch } from 'react-router-dom';
 
 import HighlightedQuote from '../../components/quotes/HighlightedQuote';
@@ -6,7 +6,7 @@ import useHttp from '../../hooks/use-http';
 import {getSingleQuote} from '../../helpers/QuotesHelper';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import {useRouter} from "next/router";
-import PrivateContent from "../../components/UI/PrivateContent";
+import {getServerSidePropsPrivate} from "../../helpers/PrivatePageHelper";
 
 const QuoteId = (props) => {
 
@@ -41,11 +41,13 @@ const QuoteId = (props) => {
   }
 
   return (
-    <PrivateContent>
-      <HighlightedQuote text={loadedQuote.text} author={loadedQuote.author}/>
-    </PrivateContent>
+    <HighlightedQuote text={loadedQuote.text} author={loadedQuote.author}/>
   );
 };
+
+export async function getServerSideProps(context) {
+  return getServerSidePropsPrivate(context)
+}
 
 
 export default QuoteId;

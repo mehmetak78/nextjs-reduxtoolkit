@@ -7,7 +7,7 @@ import useHttp from '../../hooks/use-http';
 import {getAllQuotes} from '../../helpers/QuotesHelper';
 
 import styles from '../../styles/quotes.module.scss'
-import PrivateContent from "../../components/UI/PrivateContent";
+import {getServerSidePropsPrivate} from "../../helpers/PrivatePageHelper";
 
 const Index = () => {
   const {sendRequest, status, data: loadedQuotes, error} = useHttp(
@@ -40,7 +40,12 @@ const Index = () => {
     pageContent = <QuoteList quotes={loadedQuotes}/>;
   }
 
-  return <PrivateContent>{pageContent}</PrivateContent>
+  return <Fragment>{pageContent}</Fragment>
 };
+
+export async function getServerSideProps(context) {
+  return getServerSidePropsPrivate(context)
+}
+
 
 export default Index;

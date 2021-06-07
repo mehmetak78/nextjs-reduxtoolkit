@@ -7,7 +7,7 @@ import PrivateContent from "../components/UI/PrivateContent";
 
 export default function HomePage() {
   return (
-    <PrivateContent>
+/*    <PrivateContent>*/
       <div className={styles.home}>
         <Head>
           <title>NextJS with App-wide Context</title>
@@ -45,6 +45,6 @@ export default function HomePage() {
           </a>
         </Grid>
       </div>
-    </PrivateContent>
+/*    </PrivateContent>*/
   )
 }

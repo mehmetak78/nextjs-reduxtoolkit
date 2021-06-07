@@ -4,7 +4,7 @@ import Head from 'next/head';
 import {Fragment} from "react";
 
 import keys from "../config/keys";
-import PrivateContent from "../components/UI/PrivateContent";
+import {getServerSidePropsPrivate} from "../helpers/PrivatePageHelper";
 
 const DUMMY_MEETUPS = [
   {
@@ -26,17 +26,17 @@ const DUMMY_MEETUPS = [
 
 const HomePage = (props) => {
   return (
-    <PrivateContent>
+    <Fragment>
       <Head>
         <title>NextJS React Meetups</title>
         <meta name='description' content='Browse a huge list of meetups'/>
       </Head>
       <MeetupList meetups={props.meetups}/>
-    </PrivateContent>
+    </Fragment>
   );
 };
 
-export async function getStaticProps() {
+/*export async function getStaticProps() {
   // fetch data from an API
   const client = await MongoClient.connect(
     keys.mongoURI
@@ -60,15 +60,38 @@ export async function getStaticProps() {
     },
     revalidate: 1,
   };
-}
+}*/
 
-/*export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  //return getServerSidePropsPrivate(context)
   // fetch data from an API
+
+  const retObj = getServerSidePropsPrivate(context);
+  if ((await retObj).redirect) {
+    return retObj;
+  }
+
+  const client = await MongoClient.connect(
+    keys.mongoURI
+  );
+  const db = client.db();
+
+  const meetupsCollection = db.collection('meetups');
+
+  const meetups = await meetupsCollection.find().toArray();
+
+  await client.close();
+
   return {
     props: {
-      meetups: DUMMY_MEETUPS
+      meetups: meetups.map((meetup) => ({
+        title: meetup.title,
+        address: meetup.address,
+        image: meetup.image,
+        id: meetup._id.toString(),
+      })),
     }
-  }
-}*/
+  };
+}
 
 export default HomePage;

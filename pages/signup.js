@@ -8,7 +8,7 @@ import Button from "../components/UI/Button";
 import {useRouter} from "next/router";
 
 import useHttp from "../hooks/use-http";
-import {fetchAuth} from "../helpers/AuthHelpers";
+import {fetchAuth} from "../helpers/NextAuthHelper";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
 
 import {useDispatch} from "react-redux";
@@ -29,10 +29,10 @@ const SignupPage = (props) => {
   useEffect(() => {
     if (status === 'completed') {
       if (!error) {
-        const expirationTime = new Date(
+/*        const expirationTime = new Date(
           new Date().getTime() + +data.expiresIn * 1000
         );
-        dispatch(login(username.value, data.idToken, expirationTime.toISOString()));
+        dispatch(login(username.value, data.idToken, expirationTime.toISOString()));*/
         router.push('/')
         dispatch(showNotification('Success!','Successfull Signup','success'));
       } else {
@@ -59,6 +59,7 @@ const SignupPage = (props) => {
   return (
     <Form onSubmit={submitHandler}>
       <Card>
+        <h1>Signup Page</h1>
         <div>
           <Input inputHook={username}/>
           <Input inputHook={password}/>

@@ -28,6 +28,11 @@ MongoDB
 - npm install @reduxjs/toolkit
 - npm install react-redux
 
+- NEXTJS Authentication
+    - npm install next-auth
+    - npm install bcryptjs
+
+
 - Create a React component in index.js which will be the home page. (The root path:  / )
 
 - The file name under pages directory will be the path name also.
@@ -58,6 +63,8 @@ MongoDB
 
 - For Modal
     - add _document.js
+
+
 
 
 - HATA

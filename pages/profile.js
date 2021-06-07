@@ -1,4 +1,4 @@
-import React, {Fragment, useCallback, useContext, useEffect} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import Card from "../components/UI/Card";
 import styles from '../styles/Login.module.scss'
 import Form from "../components/UI/Form";
@@ -8,28 +8,27 @@ import Button from "../components/UI/Button";
 import {useRouter} from "next/router";
 
 import useHttp from "../hooks/use-http";
-import {fetchAuth} from "../helpers/AuthHelpers";
+import {fetchAuth} from "../helpers/NextAuthHelper";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
 
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {showNotification} from "../store/notificationSlice";
-import {login} from "../store/authSlice";
-import PrivateContent from "../components/UI/PrivateContent";
+
+import {getServerSidePropsPrivate} from "../helpers/PrivatePageHelper";
 
 
 const ProfilePage = (props) => {
-  const password = useInput('text', 'password', 'New Password', (value) => value.trim() !== '')
+  const oldPassword = useInput('text', 'password', 'Old Password', (value) => value.trim() !== '')
+  const newPassword = useInput('text', 'password', 'New Password', (value) => value.trim() !== '')
 
   const router = useRouter();
   const dispatch = useDispatch();
-  const auth = useSelector(state => state.auth);
 
   const {sendRequest, status, data, error} = useHttp(fetchAuth);
 
   useEffect(() => {
     if (status === 'completed') {
       if (!error) {
-        dispatch(login(auth.userName, data.idToken));
         router.push('/')
         dispatch(showNotification('Success!', 'Successfull Change Password', 'success'));
       } else {
@@ -42,9 +41,9 @@ const ProfilePage = (props) => {
   const submitHandler = (e) => {
     e.preventDefault();
     const userData = {
-      authType: 'changepassword',
-      token: authContext.token,
-      password: password.value
+      authType: 'change-password',
+      oldPassword: oldPassword.value,
+      newPassword: newPassword.value
     }
     sendRequest(userData);
   }
@@ -54,12 +53,14 @@ const ProfilePage = (props) => {
   }
 
   return (
-    <PrivateContent>
+    <Fragment>
       <Form onSubmit={submitHandler}>
         <Card>
+          <h1>Profile Page</h1>
+          {props.session && <p>{props.session.user.email}</p>}
           <div>
-            <h1>{auth.userName}</h1>
-            <Input inputHook={password}/>
+            <Input inputHook={oldPassword}/>
+            <Input inputHook={newPassword}/>
           </div>
           <div className={styles["form-actions"]}>
             <Button styletype='btn2' type='button' onClick={cancelHandler}>Cancel</Button>
@@ -68,8 +69,12 @@ const ProfilePage = (props) => {
           {status === 'pending' && <LoadingSpinner/>}
         </Card>
       </Form>
-    </PrivateContent>
+    </Fragment>
   );
+}
+
+export async function getServerSideProps(context) {
+  return getServerSidePropsPrivate(context)
 }
 
 export default ProfilePage;

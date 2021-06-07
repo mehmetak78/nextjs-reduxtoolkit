@@ -5,6 +5,7 @@ import QuoteForm from '../components/quotes/QuoteForm';
 import useHttp from '../hooks/use-http';
 import { addQuote } from '../helpers/QuotesHelper';
 import {useRouter} from "next/router";
+import {getServerSidePropsPrivate} from "../helpers/PrivatePageHelper";
 
 ;
 
@@ -25,5 +26,10 @@ const Newquote = () => {
 
   return <QuoteForm isLoading={status === 'pending'} onAddQuote={addQuoteHandler} />;
 };
+
+export async function getServerSideProps(context) {
+  return getServerSidePropsPrivate(context)
+}
+
 
 export default Newquote;
